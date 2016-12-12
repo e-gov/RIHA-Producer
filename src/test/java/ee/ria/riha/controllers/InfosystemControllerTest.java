@@ -43,4 +43,11 @@ public class InfosystemControllerTest {
     assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
     assertEquals("/123/shortName", infosystem.getMeta().getURI());
   }
+
+  @Test
+  public void json() {
+    doReturn("[{\"name\":\"infosystem name\"}]").when(infosystemStorageService).load();
+
+    assertEquals("[{\"name\":\"infosystem name\"}]", controller.json());
+  }
 }

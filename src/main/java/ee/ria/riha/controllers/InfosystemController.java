@@ -5,10 +5,12 @@ import ee.ria.riha.services.DateTimeService;
 import ee.ria.riha.services.InfosystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static ee.ria.riha.services.DateTimeService.format;
 import static ee.ria.riha.services.DateTimeService.toUTC;
@@ -34,5 +36,11 @@ public class InfosystemController {
     infosystemStorageService.save(infosystem);
     //todo show success message
     return "redirect:/";
+  }
+
+  @RequestMapping(value = "/systems.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public String json() {
+    return infosystemStorageService.load();
   }
 }
