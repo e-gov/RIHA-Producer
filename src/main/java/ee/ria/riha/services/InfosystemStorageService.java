@@ -14,6 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 public class InfosystemStorageService {
+
   Path filePath = Paths.get("systems.json");
 
   public void save(Infosystem infosystem) {
