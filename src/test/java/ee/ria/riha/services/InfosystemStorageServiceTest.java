@@ -38,9 +38,9 @@ public class InfosystemStorageServiceTest {
 
     assertEquals("[{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
-      "\"docUrl\":\"http://doc.url\"," +
+      "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"," +
-      "\"shortName\":\"short-name\"," +
+      "\"shortname\":\"short-name\"," +
       "\"status\":{\"timestamp\":\"status-timestamp\"}}]", savedData);
   }
 
@@ -55,9 +55,9 @@ public class InfosystemStorageServiceTest {
     assertEquals("[{\"name\":\"existing-system-name\"}," +
       "{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
-      "\"docUrl\":\"http://doc.url\"," +
+      "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"" +
-      ",\"shortName\":\"short-name\"," +
+      ",\"shortname\":\"short-name\"," +
       "\"status\":{\"timestamp\":\"status-timestamp\"}}]", savedData);
   }
 }

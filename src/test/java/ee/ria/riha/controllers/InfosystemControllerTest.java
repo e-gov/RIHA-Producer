@@ -39,8 +39,8 @@ public class InfosystemControllerTest {
     verify(infosystemStorageService).save(infosystemArgument.capture());
     Infosystem infosystem = infosystemArgument.getValue();
     assertEquals("name", infosystem.getName());
-    assertEquals("shortName", infosystem.getShortName());
-    assertEquals("docUrl", infosystem.getDocUrl());
+    assertEquals("shortName", infosystem.getShortname());
+    assertEquals("docUrl", infosystem.getDocumentation());
     assertEquals("123", infosystem.getOwner());
     assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
     assertEquals("/123/shortName", infosystem.getMeta().getURI());

@@ -1,27 +1,30 @@
 <#import "layout.html" as layout>
 <@layout.html>
   <div class="container">
-    <h1>Sisesta infosüsteemi andmed</h1>
-    <form id="infosystem-form" method="post" action="/save/">
-      <div class="form-group">
-        <label for="name">Nimi</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="Nimi" required>
-      </div>
-      <div class="form-group">
-        <label for="short-name">Lühinimi</label>
-        <input type="text" class="form-control" id="short-name" name="shortName" placeholder="Lühinimi" required>
-      </div>
-      <div class="form-group">
-        <label for="doc-url">Dokumentatsiooni URL</label>
-        <input type="text" class="form-control" id="doc-url" name="docUrl" placeholder="Dokumentatsiooni URL" required>
-      </div>
-
-      <button type="submit" class="btn btn-default">Salvesta</button>
-    </form>
+    <h1>Infosüsteemid</h1>
+    <div class="table-responsive">
+      <table id="infosystems-table" class="table table-striped table-bordered dataTable" cellspacing="0" width="100%">
+        <thead>
+          <th>Nimi</th>
+          <th>Lühinimi</th>
+          <th>Dokumentatsiooni URL</th>
+        </thead>
+        <tbody>
+          <script id="row-template" type="text/x-custom-template">
+            <tr>
+              <td class="name"></td>
+              <td class="short-name"></td>
+              <td class="documentation"></td>
+            </tr>
+          </script>
+        </tbody>
+      </table>
+      <a class="btn btn-primary" href="/form/">Lisa uus</a>
+    </div>
   </div>
   <script>
     $(function() {
-      $('#infosystem-form').validator();
+      new Producer().init();
     })
   </script>
 </@layout.html>

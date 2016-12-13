@@ -6,16 +6,16 @@ import lombok.Getter;
 @Getter
 public class Infosystem {
   String name;
-  String shortName;
-  String docUrl;
+  String shortname;
+  String documentation;
   String owner;
   Status status;
   Meta meta;
 
-  public Infosystem(String name, String shortName, String docUrl, String owner, String statusTimestamp) {
+  public Infosystem(String name, String shortName, String documentation, String owner, String statusTimestamp) {
     this.name = name;
-    this.shortName = shortName;
-    this.docUrl = docUrl;
+    this.shortname = shortName;
+    this.documentation = documentation;
     this.owner = owner;
     this.status = new Status(statusTimestamp);
     this.meta = new Meta();
@@ -30,7 +30,7 @@ public class Infosystem {
   @AllArgsConstructor
   public class Meta {
     public String getURI() {
-      return "/" + owner + "/" + shortName;
+      return "/" + owner + "/" + shortname;
     };
   }
 }

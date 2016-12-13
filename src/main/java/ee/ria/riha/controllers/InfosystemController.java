@@ -29,9 +29,14 @@ public class InfosystemController {
     return "index";
   }
 
+  @RequestMapping(value = "/form/", method = RequestMethod.GET)
+  public String form() {
+    return "form";
+  }
+
   @RequestMapping(value = "/save/", method = RequestMethod.POST)
-  public String save(@RequestParam("name") String name, @RequestParam("shortName") String shortName, @RequestParam("docUrl") String docUrl) {
-    Infosystem infosystem = new Infosystem(name, shortName, docUrl, owner, format(toUTC(dateTimeService.now())));
+  public String save(@RequestParam("name") String name, @RequestParam("shortName") String shortName, @RequestParam("documentation") String documentation) {
+    Infosystem infosystem = new Infosystem(name, shortName, documentation, owner, format(toUTC(dateTimeService.now())));
     if (!isValid(infosystem)) throw new BadRequest();
 
     infosystemStorageService.save(infosystem);
@@ -46,8 +51,8 @@ public class InfosystemController {
 
   boolean isValid(Infosystem infosystem) {
     return isNotBlank(infosystem.getName())
-      && isNotBlank(infosystem.getShortName())
-      && isNotBlank(infosystem.getDocUrl())
+      && isNotBlank(infosystem.getShortname())
+      && isNotBlank(infosystem.getDocumentation())
       && isNotBlank(infosystem.getOwner())
       && isNotBlank(infosystem.getStatus().getTimestamp());
   }
