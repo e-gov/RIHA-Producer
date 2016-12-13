@@ -18,7 +18,7 @@ function Producer() {
     var templateRow = $('table #row-template').html();
 
     data.forEach(function (infosystem) {
-      var row = $(templateRow).clone();
+      var row = $(templateRow);
       row.find('.name').text(infosystem.name);
       row.find('.short-name').text(infosystem.shortname);
       row.find('.documentation').text(infosystem.documentation);

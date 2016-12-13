@@ -24,7 +24,7 @@ describe('Producer', function () {
 
     new Producer()._createTableRows(data);
 
-    var rows = $('tbody tr:not(.template-row)');
+    var rows = $('tbody tr');
 
     expect(rows.length).toBe(2);
     expect($(rows[0]).find('.name').text()).toBe('nimi');
