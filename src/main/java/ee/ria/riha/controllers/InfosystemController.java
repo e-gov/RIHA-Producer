@@ -5,15 +5,14 @@ import ee.ria.riha.services.DateTimeService;
 import ee.ria.riha.services.InfosystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import static ee.ria.riha.services.DateTimeService.format;
 import static ee.ria.riha.services.DateTimeService.toUTC;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Controller
 public class InfosystemController {
@@ -33,8 +32,9 @@ public class InfosystemController {
   @RequestMapping(value = "/save/", method = RequestMethod.POST)
   public String save(@RequestParam("name") String name, @RequestParam("shortName") String shortName, @RequestParam("docUrl") String docUrl) {
     Infosystem infosystem = new Infosystem(name, shortName, docUrl, owner, format(toUTC(dateTimeService.now())));
+    if (!isValid(infosystem)) throw new BadRequest();
+
     infosystemStorageService.save(infosystem);
-    //todo show success message
     return "redirect:/";
   }
 
@@ -42,5 +42,19 @@ public class InfosystemController {
   @ResponseBody
   public String json() {
     return infosystemStorageService.load();
+  }
+
+  boolean isValid(Infosystem infosystem) {
+    return isNotBlank(infosystem.getName())
+      && isNotBlank(infosystem.getShortName())
+      && isNotBlank(infosystem.getDocUrl())
+      && isNotBlank(infosystem.getOwner())
+      && isNotBlank(infosystem.getStatus().getTimestamp());
+  }
+
+  @ExceptionHandler(BadRequest.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public String handleAppException(BadRequest e) {
+    return e.getMessage();
   }
 }
