@@ -30,7 +30,7 @@ public class InfosystemStorageServiceTest {
 
   @Test
   public void save() throws IOException {
-    doReturn(null).when(service).load();
+    doReturn("[]").when(service).load();
 
     service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 

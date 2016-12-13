@@ -19,8 +19,7 @@ public class InfosystemStorageService {
 
   public void save(Infosystem infosystem) {
     try {
-      String existingInfosystems = load();
-      JSONArray infosystems = existingInfosystems == null ? new JSONArray() : new JSONArray(existingInfosystems);
+      JSONArray infosystems = new JSONArray(load());
       infosystems.put(new JSONObject(infosystem));
       Files.write(filePath, infosystems.toString().getBytes(UTF_8));
     }
@@ -30,7 +29,7 @@ public class InfosystemStorageService {
   }
 
   public String load() {
-    if (!filePath.toFile().exists()) return null;
+    if (!filePath.toFile().exists()) return "[]";
     try {
       return new String(Files.readAllBytes(filePath), UTF_8);
     }
