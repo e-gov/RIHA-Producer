@@ -34,14 +34,12 @@ public class InfosystemStorageServiceTest {
 
     service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 
-    String savedData = new String(Files.readAllBytes(service.filePath), UTF_8);
-
     assertEquals("[{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"," +
       "\"shortname\":\"short-name\"," +
-      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", savedData);
+      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData());
   }
 
   @Test
@@ -50,14 +48,25 @@ public class InfosystemStorageServiceTest {
 
     service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 
-    String savedData = new String(Files.readAllBytes(service.filePath), UTF_8);
-
     assertEquals("[{\"name\":\"existing-system-name\"}," +
       "{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"" +
       ",\"shortname\":\"short-name\"," +
-      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", savedData);
+      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData());
+  }
+
+  @Test
+  public void delete() throws IOException {
+    Files.write(service.filePath, "[{\"shortname\":\"other-short-name\"}, {\"shortname\":\"short-name\"}]".getBytes());
+
+    service.delete("short-name");
+
+    assertEquals("[{\"shortname\":\"other-short-name\"}]", fileData());
+  }
+
+  private String fileData() throws IOException {
+    return new String(Files.readAllBytes(service.filePath), UTF_8);
   }
 }

@@ -5,7 +5,18 @@ function Producer() {
   var self = this;
 
   self.init = function () {
+    self._initDeleteButtons();
     loadInfosystems();
+  };
+
+  self._initDeleteButtons = function () {
+    $('#infosystems-table').on('click', 'button.delete', function () {
+      var row = $(this).closest('tr');
+      var id = row.find('td.short-name').text();
+      $.post('/delete/', {id: id}).done(function () {
+        row.remove();
+      });
+    });
   };
 
   function loadInfosystems() {

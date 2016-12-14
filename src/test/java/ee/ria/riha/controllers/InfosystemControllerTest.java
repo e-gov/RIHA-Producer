@@ -81,4 +81,11 @@ public class InfosystemControllerTest {
     assertFalse(controller.isValid(new Infosystem("    ", "   ", "   ", "   ", "  ")));
     assertFalse(controller.isValid(new Infosystem(null, null, null, null, null)));
   }
+
+  @Test
+  public void delete() {
+    controller.delete("shortname");
+
+    verify(infosystemStorageService).delete("shortname");
+  }
 }

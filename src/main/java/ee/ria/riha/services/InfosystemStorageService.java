@@ -17,21 +17,36 @@ public class InfosystemStorageService {
 
   Path filePath = Paths.get("systems.json");
 
-  public void save(Infosystem infosystem) {
-    try {
-      JSONArray infosystems = new JSONArray(load());
-      infosystems.put(new JSONObject(infosystem));
-      Files.write(filePath, infosystems.toString().getBytes(UTF_8));
+  synchronized public void save(Infosystem infosystem) {
+    JSONArray infosystems = new JSONArray(load());
+    infosystems.put(new JSONObject(infosystem));
+    save(infosystems);
+  }
+
+  synchronized public void delete(String shortName) {
+    JSONArray infosystems = new JSONArray(load());
+    for (int i = 0; i < infosystems.length(); i++) {
+      JSONObject infosystem = infosystems.getJSONObject(i);
+      if (infosystem.getString("shortname").equals(shortName)) {
+        infosystems.remove(i);
+      }
     }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    save(infosystems);
   }
 
   public String load() {
     if (!filePath.toFile().exists()) return "[]";
     try {
       return new String(Files.readAllBytes(filePath), UTF_8);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void save(JSONArray infosystems) {
+    try {
+      Files.write(filePath, infosystems.toString().getBytes(UTF_8));
     }
     catch (IOException e) {
       throw new RuntimeException(e);

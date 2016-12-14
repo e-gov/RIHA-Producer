@@ -43,6 +43,12 @@ public class InfosystemController {
     return "redirect:/";
   }
 
+  @RequestMapping(value = "/delete/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(value = HttpStatus.OK)
+  public void delete(@RequestParam("id") String shortName) {
+    infosystemStorageService.delete(shortName);
+  }
+
   @RequestMapping(value = "/systems.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public String json() {

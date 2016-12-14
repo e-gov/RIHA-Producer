@@ -34,4 +34,21 @@ describe('Producer', function () {
     expect($(rows[1]).find('.short-name').text()).toBe('short-name');
     expect($(rows[1]).find('.documentation').text()).toBe('https://12345.com/short-name');
   });
+
+  it('deletes infosystem', function() {
+    loadFixtures('index.html');
+    var producer = new Producer();
+    producer._createTableRows(data);
+    producer._initDeleteButtons();
+    var rowsBeforeDelete = $('tbody tr');
+    expect(rowsBeforeDelete.length).toBe(2);
+    spyOn($, 'post').and.returnValue(promise());
+
+    $(rowsBeforeDelete[0]).find('button.delete').trigger('click');
+
+    expect($.post).toHaveBeenCalledWith('/delete/', {id: 'lühinimi'});
+    var rows = $('tbody tr');
+    expect(rows.length).toBe(1);
+    expect($(rows[0]).find('.name').text()).toBe('name');
+  });
 });
