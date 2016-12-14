@@ -43,6 +43,7 @@ describe('Producer', function () {
     var rowsBeforeDelete = $('tbody tr');
     expect(rowsBeforeDelete.length).toBe(2);
     spyOn($, 'post').and.returnValue(promise());
+    spyOn(window, 'confirm').and.returnValue(true);
 
     $(rowsBeforeDelete[0]).find('button.delete').trigger('click');
 
@@ -50,6 +51,23 @@ describe('Producer', function () {
     var rows = $('tbody tr');
     expect(rows.length).toBe(1);
     expect($(rows[0]).find('.name').text()).toBe('name');
+  });
+
+  it('Delete button click does not delete infosystem if not confirmed', function() {
+    loadFixtures('index.html');
+    var producer = new Producer();
+    producer._createTableRows(data);
+    producer._initDeleteButtons();
+    var rowsBeforeDelete = $('tbody tr');
+    expect(rowsBeforeDelete.length).toBe(2);
+    spyOn($, 'post');
+    spyOn(window, 'confirm').and.returnValue(false);
+
+    $(rowsBeforeDelete[0]).find('button.delete').trigger('click');
+
+    expect($.post).not.toHaveBeenCalled();
+    var rows = $('tbody tr');
+    expect(rows.length).toBe(2);
   });
 
   it('Edit button click opens infosystem edit form', function() {

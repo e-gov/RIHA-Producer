@@ -14,9 +14,11 @@ function Producer() {
     $('#infosystems-table').on('click', 'button.delete', function () {
       var row = $(this).closest('tr');
       var id = row.find('td.short-name').text();
-      $.post('/delete/', {id: id}).done(function () {
-        row.remove();
-      });
+      if (confirm('Oled kindel?')) {
+        $.post('/delete/', {id: id}).done(function () {
+          row.remove();
+        });
+      }
     });
   };
 
