@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -66,7 +67,7 @@ public class InfosystemControllerTest {
   public void json() {
     doReturn("[{\"name\":\"infosystem name\"}]").when(infosystemStorageService).load();
 
-    assertEquals("[{\"name\":\"infosystem name\"}]", controller.json());
+    JSONAssert.assertEquals("[{\"name\":\"infosystem name\"}]", controller.json(), true);
   }
 
   @Test

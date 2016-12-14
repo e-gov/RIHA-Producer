@@ -7,12 +7,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 import java.nio.file.Files;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,12 +34,12 @@ public class InfosystemStorageServiceTest {
 
     service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 
-    assertEquals("[{\"owner\":\"ownerCode\"," +
+    JSONAssert.assertEquals("[{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"," +
       "\"shortname\":\"short-name\"," +
-      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData());
+      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData(), true);
   }
 
   @Test
@@ -48,13 +48,13 @@ public class InfosystemStorageServiceTest {
 
     service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 
-    assertEquals("[{\"name\":\"existing-system-name\"}," +
+    JSONAssert.assertEquals("[{\"name\":\"existing-system-name\"}," +
       "{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"" +
       ",\"shortname\":\"short-name\"," +
-      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData());
+      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData(), true);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class InfosystemStorageServiceTest {
 
     service.delete("short-name");
 
-    assertEquals("[{\"shortname\":\"other-short-name\"}]", fileData());
+    JSONAssert.assertEquals("[{\"shortname\":\"other-short-name\"}]", fileData(), true);
   }
 
   private String fileData() throws IOException {
