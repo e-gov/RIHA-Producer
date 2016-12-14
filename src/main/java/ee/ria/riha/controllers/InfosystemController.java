@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import static ee.ria.riha.services.DateTimeService.format;
 import static ee.ria.riha.services.DateTimeService.toUTC;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Controller
@@ -34,12 +36,24 @@ public class InfosystemController {
     return "form";
   }
 
+  @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+  public String edit(Model model, @PathVariable("id") String id) {
+    Infosystem infosystem = infosystemStorageService.find(id);
+    model.addAttribute("infosystem", infosystem);
+    return "form";
+  }
+
   @RequestMapping(value = "/save/", method = RequestMethod.POST)
-  public String save(@RequestParam("name") String name, @RequestParam("shortName") String shortName, @RequestParam("documentation") String documentation) {
+  public String save(@RequestParam("id") String id, @RequestParam("name") String name, @RequestParam("shortName") String shortName,
+                     @RequestParam("documentation") String documentation) {
     Infosystem infosystem = new Infosystem(name, shortName, documentation, owner, format(toUTC(dateTimeService.now())));
     if (!isValid(infosystem)) throw new BadRequest();
 
-    infosystemStorageService.save(infosystem);
+    if (isEmpty(id)) {
+      infosystemStorageService.save(infosystem);
+    } else {
+      infosystemStorageService.save(id, infosystem);
+    }
     return "redirect:/";
   }
 

@@ -6,6 +6,7 @@ function Producer() {
 
   self.init = function () {
     self._initDeleteButtons();
+    self._initEditButtons();
     loadInfosystems();
   };
 
@@ -16,6 +17,18 @@ function Producer() {
       $.post('/delete/', {id: id}).done(function () {
         row.remove();
       });
+    });
+  };
+
+  self._redirect = function (url) {
+    window.location = url;
+  };
+
+  self._initEditButtons = function () {
+    $('#infosystems-table').on('click', 'button.edit', function () {
+      var row = $(this).closest('tr');
+      var id = row.find('td.short-name').text();
+      self._redirect('/edit/'+id);
     });
   };
 

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,10 +30,24 @@ public class InfosystemStorageServiceTest {
   }
 
   @Test
+  public void updateExistingInfosystem() throws IOException {
+    Files.write(service.filePath, "[{\"shortname\":\"existing-short-name\"}]".getBytes());
+
+    service.save("existing-short-name", new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
+
+    JSONAssert.assertEquals("[{\"owner\":\"ownerCode\"," +
+      "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
+      "\"documentation\":\"http://doc.url\"," +
+      "\"name\":\"name\"," +
+      "\"shortname\":\"short-name\"," +
+      "\"status\":{\"timestamp\":\"status-timestamp\"}}]", fileData(), true);
+  }
+
+  @Test
   public void save() throws IOException {
     doReturn("[]").when(service).load();
 
-    service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
+    service.save(null, new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 
     JSONAssert.assertEquals("[{\"owner\":\"ownerCode\"," +
       "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
@@ -46,7 +61,7 @@ public class InfosystemStorageServiceTest {
   public void save_mergesWithExistingInfosystems() throws IOException {
     Files.write(service.filePath, "[{\"name\":\"existing-system-name\"}]".getBytes());
 
-    service.save(new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
+    service.save(null, new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
 
     JSONAssert.assertEquals("[{\"name\":\"existing-system-name\"}," +
       "{\"owner\":\"ownerCode\"," +
@@ -64,6 +79,17 @@ public class InfosystemStorageServiceTest {
     service.delete("short-name");
 
     JSONAssert.assertEquals("[{\"shortname\":\"other-short-name\"}]", fileData(), true);
+  }
+
+  @Test
+  public void findByShortName() throws IOException {
+    Files.write(service.filePath, "[{\"shortname\":\"other-short-name\",\"name\":\"Other Name\"}, {\"shortname\":\"short-name\",\"name\":\"Name\"}]".getBytes());
+
+    Infosystem infosystem = service.find("short-name");
+
+    assertEquals("short-name", infosystem.getShortname());
+    assertEquals("Name", infosystem.getName());
+
   }
 
   private String fileData() throws IOException {

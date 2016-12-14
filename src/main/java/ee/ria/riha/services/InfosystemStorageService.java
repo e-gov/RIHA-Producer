@@ -17,21 +17,39 @@ public class InfosystemStorageService {
 
   Path filePath = Paths.get("systems.json");
 
-  synchronized public void save(Infosystem infosystem) {
+  public void save(Infosystem infosystem) {
+    save(null, infosystem);
+  }
+
+  synchronized public void save(String shortName, Infosystem infosystem) {
     JSONArray infosystems = new JSONArray(load());
+    if (shortName != null) {
+      infosystems.remove(findIndex(shortName, infosystems));
+    }
     infosystems.put(new JSONObject(infosystem));
     save(infosystems);
   }
 
   synchronized public void delete(String shortName) {
     JSONArray infosystems = new JSONArray(load());
+    infosystems.remove(findIndex(shortName, infosystems));
+    save(infosystems);
+  }
+
+  public Infosystem find(String shortName) {
+    JSONArray infosystems = new JSONArray(load());
+    int index = findIndex(shortName, infosystems);
+    return index < 0 ? null : new Infosystem(infosystems.getJSONObject(index));
+  }
+
+  private int findIndex(String shortName, JSONArray infosystems) {
     for (int i = 0; i < infosystems.length(); i++) {
       JSONObject infosystem = infosystems.getJSONObject(i);
       if (infosystem.getString("shortname").equals(shortName)) {
-        infosystems.remove(i);
+        return i;
       }
     }
-    save(infosystems);
+    return -1;
   }
 
   public String load() {

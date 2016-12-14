@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.ui.Model;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -34,7 +35,7 @@ public class InfosystemControllerTest {
     controller.owner = "123";
     doReturn(true).when(controller).isValid(any(Infosystem.class));
 
-    controller.save("name", "shortName", "docUrl");
+    controller.save(null, "name", "shortName", "docUrl");
 
     ArgumentCaptor<Infosystem> infosystemArgument = ArgumentCaptor.forClass(Infosystem.class);
     verify(infosystemStorageService).save(infosystemArgument.capture());
@@ -47,12 +48,42 @@ public class InfosystemControllerTest {
     assertEquals("/123/shortName", infosystem.getMeta().getURI());
   }
 
+  @Test
+  public void save_updatesExisting() {
+    doReturn(ZonedDateTime.of(2016, 1, 1, 10, 11, 12, 0, ZoneId.of("Europe/Tallinn"))).when(dateTimeService).now();
+    controller.owner = "123";
+    doReturn(true).when(controller).isValid(any(Infosystem.class));
+
+    controller.save("existing-shortName", "name", "new-shortName", "docUrl");
+
+    ArgumentCaptor<Infosystem> infosystemArgument = ArgumentCaptor.forClass(Infosystem.class);
+    verify(infosystemStorageService).save(eq("existing-shortName"), infosystemArgument.capture());
+    Infosystem infosystem = infosystemArgument.getValue();
+    assertEquals("name", infosystem.getName());
+    assertEquals("new-shortName", infosystem.getShortname());
+    assertEquals("docUrl", infosystem.getDocumentation());
+    assertEquals("123", infosystem.getOwner());
+    assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
+    assertEquals("/123/new-shortName", infosystem.getMeta().getURI());
+  }
+
+  @Test
+  public void edit() {
+    Infosystem infosystem = mock(Infosystem.class);
+    doReturn(infosystem).when(infosystemStorageService).find("shortname");
+    Model model = mock(Model.class);
+    
+    controller.edit(model, "shortname");
+
+    verify(model).addAttribute("infosystem", infosystem);
+  }
+
   @Test(expected = BadRequest.class)
   public void save_doesNotSaveInvalidInfosystem() {
     doReturn(ZonedDateTime.of(2016, 1, 1, 10, 11, 12, 0, ZoneId.of("Europe/Tallinn"))).when(dateTimeService).now();
     doReturn(false).when(controller).isValid(any(Infosystem.class));
 
-    controller.save("", "", "");
+    controller.save(null, "", "", "");
 
     verify(infosystemStorageService, never()).save(any(Infosystem.class));
   }
