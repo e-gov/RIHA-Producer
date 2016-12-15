@@ -3,7 +3,7 @@ describe('Producer', function () {
   var data = [
     {
       "owner": "12345",
-      "meta": {"URI": "/12345/lühinimi"},
+      "meta": {"URI": "http://base.url/lühinimi"},
       "documentation": "https://12345.com/lyhinimi",
       "name": "nimi",
       "shortname": "lühinimi",
@@ -11,7 +11,7 @@ describe('Producer', function () {
     },
     {
       "owner": "12345",
-      "meta": {"URI": "/12345/short-name"},
+      "meta": {"URI": "http://base.url/short-name"},
       "documentation": "https://12345.com/short-name",
       "name": "name",
       "shortname": "short-name",
