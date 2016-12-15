@@ -76,8 +76,8 @@ public class InfosystemController {
     return isNotBlank(infosystem.getName())
       && isNotBlank(infosystem.getShortname())
       && isNotBlank(infosystem.getDocumentation())
-      && isNotBlank(infosystem.getOwner())
-      && isNotBlank(infosystem.getStatus().getTimestamp());
+      && isNotBlank(infosystem.getOwner().getCode())
+      && isNotBlank(infosystem.getMeta().getSystem_status().getTimestamp());
   }
 
   @ExceptionHandler(BadRequest.class)

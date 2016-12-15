@@ -44,9 +44,9 @@ public class InfosystemControllerTest {
     assertEquals("name", infosystem.getName());
     assertEquals("shortName", infosystem.getShortname());
     assertEquals("docUrl", infosystem.getDocumentation());
-    assertEquals("123", infosystem.getOwner());
-    assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
-    assertEquals("http://base.url/shortName", infosystem.getMeta().getURI());
+    assertEquals("123", infosystem.getOwner().getCode());
+    assertEquals("2016-01-01T08:11:12", infosystem.getMeta().getSystem_status().getTimestamp());
+    assertEquals("http://base.url/shortName", infosystem.getUri());
   }
 
   @Test
@@ -64,9 +64,9 @@ public class InfosystemControllerTest {
     assertEquals("name", infosystem.getName());
     assertEquals("new-shortName", infosystem.getShortname());
     assertEquals("docUrl", infosystem.getDocumentation());
-    assertEquals("123", infosystem.getOwner());
-    assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
-    assertEquals("http://base.url/new-shortName", infosystem.getMeta().getURI());
+    assertEquals("123", infosystem.getOwner().getCode());
+    assertEquals("2016-01-01T08:11:12", infosystem.getMeta().getSystem_status().getTimestamp());
+    assertEquals("http://base.url/new-shortName", infosystem.getUri());
   }
 
   @Test

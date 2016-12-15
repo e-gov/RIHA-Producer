@@ -4,22 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
+import static org.springframework.web.util.UriUtils.encode;
+
 @Getter
 public class Infosystem {
   String name;
   String shortname;
   String documentation;
-  String owner;
-  Status status;
+  Owner owner;
   Meta meta;
+  String uri;
 
-  public Infosystem(String name, String shortName, String documentation, String owner, String statusTimestamp, String baseUrl) {
+  public Infosystem(String name, String shortName, String documentation, String ownerCode, String statusTimestamp, String baseUrl) {
     this.name = name;
     this.shortname = shortName;
     this.documentation = documentation;
-    this.owner = owner;
-    this.status = new Status(statusTimestamp);
-    this.meta = new Meta(baseUrl);
+    this.owner = new Owner(ownerCode);
+    this.meta = new Meta(statusTimestamp);
+    this.uri = buildUri(baseUrl, shortName);
   }
 
   public Infosystem(JSONObject jsonObject, String baseUrl) {
@@ -27,9 +32,22 @@ public class Infosystem {
       getPropertyValue(jsonObject, "name"),
       getPropertyValue(jsonObject, "shortname"),
       getPropertyValue(jsonObject, "documentation"),
-      getPropertyValue(jsonObject, "owner"),
-      jsonObject.has("status") ? getPropertyValue(jsonObject.getJSONObject("status"), "timestamp") : null,
-      baseUrl);
+      getPropertyValue(jsonObject.getJSONObject("owner"), "code"),
+      jsonObject.has("meta") && jsonObject.getJSONObject("meta").has("system_status")
+        ? getPropertyValue(jsonObject.getJSONObject("meta").getJSONObject("system_status"), "timestamp")
+        : null,
+      baseUrl
+    );
+  }
+
+  static String buildUri(String baseUrl, String shortName) {
+    if (shortName == null) return null;
+    try {
+      return baseUrl + "/" + encode(shortName, UTF_8);
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private static String getPropertyValue(JSONObject jsonObject, String name) {
@@ -38,21 +56,22 @@ public class Infosystem {
 
   @Getter
   @AllArgsConstructor
-  public class Status {
+  public class SystemStatus {
     String timestamp;
   }
 
+  @Getter
+  @AllArgsConstructor
+  public class Owner {
+    String code;
+  }
+
+  @Getter
   public class Meta {
+    SystemStatus system_status;
 
-    String baseUrl;
-
-    public Meta(String baseUri) {
-      this.baseUrl = baseUri;
+    Meta(String statusTimestamp) {
+      this.system_status = new SystemStatus(statusTimestamp);
     }
-
-    public String getURI() {
-      if (shortname == null) return null;
-      return baseUrl + "/" + shortname;
-    };
   }
 }
