@@ -36,7 +36,7 @@ public class InfosystemTest {
         "      \"timestamp\": \"2016-12-13T17:10:20.785\"" +
         "    }" +
         "  }," +
-        "  \"uri\": \"http://base.url/Eesti%20kirikuregister\"" +
+        "  \"uri\": \"http://base.url/fox\"" +
         "}";
 
     Infosystem infosystem = new Infosystem(new JSONObject(json), "http://base.url");
