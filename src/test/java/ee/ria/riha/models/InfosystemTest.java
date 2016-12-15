@@ -10,7 +10,7 @@ public class InfosystemTest {
 
   @Test
   public void createFromEmptyJsonObject() {
-    Infosystem infosystem = new Infosystem(new JSONObject("{}"));
+    Infosystem infosystem = new Infosystem(new JSONObject("{}"), "http://base.url");
 
     assertNull(infosystem.getOwner());
     assertNull(infosystem.getMeta().getURI());
@@ -24,10 +24,10 @@ public class InfosystemTest {
   public void createNewFromJsonObject() {
     String json = "{\"owner\":\"12345\",\"meta\":{\"URI\":\"/12345/fox\"},\"documentation\":\"http://riha.eesti.ee\",\"name\":\"Rebaste register\",\"shortname\":\"fox\",\"status\":{\"timestamp\":\"2016-12-13T17:10:20.785\"}}";
 
-    Infosystem infosystem = new Infosystem(new JSONObject(json));
+    Infosystem infosystem = new Infosystem(new JSONObject(json), "http://base.url");
 
     assertEquals("12345", infosystem.getOwner());
-    assertEquals("/12345/fox", infosystem.getMeta().getURI());
+    assertEquals("http://base.url/fox", infosystem.getMeta().getURI());
     assertEquals("http://riha.eesti.ee", infosystem.getDocumentation());
     assertEquals("Rebaste register", infosystem.getName());
     assertEquals("fox", infosystem.getShortname());
@@ -36,14 +36,12 @@ public class InfosystemTest {
 
   @Test
   public void metaUri() {
-    assertNull(meta(null, null).getURI());
-    assertNull(meta("owner", null).getURI());
-    assertNull(meta(null, "shortName").getURI());
-    assertEquals("/owner/shortName", meta("owner", "shortName").getURI());
+    assertNull(meta(null).getURI());
+    assertEquals("http://base.url/shortName", meta("shortName").getURI());
   }
 
-  private Infosystem.Meta meta(String owner, String shortName) {
-    Infosystem infosystem = new Infosystem(null, shortName, null, owner, null);
+  private Infosystem.Meta meta(String shortName) {
+    Infosystem infosystem = new Infosystem(null, shortName, null, null, null, "http://base.url");
     return infosystem.getMeta();
   }
 }

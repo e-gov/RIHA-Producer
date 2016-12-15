@@ -26,6 +26,9 @@ public class InfosystemController {
   @Value("${owner}")
   String owner;
 
+  @Value("${base.url}")
+  String baseUrl;
+
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String index() {
     return "index";
@@ -46,7 +49,7 @@ public class InfosystemController {
   @RequestMapping(value = "/save/", method = RequestMethod.POST)
   public String save(@RequestParam("id") String id, @RequestParam("name") String name, @RequestParam("shortName") String shortName,
                      @RequestParam("documentation") String documentation) {
-    Infosystem infosystem = new Infosystem(name, shortName, documentation, owner, format(toUTC(dateTimeService.now())));
+    Infosystem infosystem = new Infosystem(name, shortName, documentation, owner, format(toUTC(dateTimeService.now())), baseUrl);
     if (!isValid(infosystem)) throw new BadRequest();
 
     if (isEmpty(id)) {

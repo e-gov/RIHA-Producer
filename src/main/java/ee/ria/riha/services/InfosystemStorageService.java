@@ -3,6 +3,7 @@ package ee.ria.riha.services;
 import ee.ria.riha.models.Infosystem;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,6 +17,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class InfosystemStorageService {
 
   Path filePath = Paths.get("systems.json");
+
+  @Value("${base.url}")
+  String baseUrl;
 
   public void save(Infosystem infosystem) {
     save(null, infosystem);
@@ -39,7 +43,7 @@ public class InfosystemStorageService {
   public Infosystem find(String shortName) {
     JSONArray infosystems = new JSONArray(load());
     int index = findIndex(shortName, infosystems);
-    return index < 0 ? null : new Infosystem(infosystems.getJSONObject(index));
+    return index < 0 ? null : new Infosystem(infosystems.getJSONObject(index), baseUrl);
   }
 
   private int findIndex(String shortName, JSONArray infosystems) {

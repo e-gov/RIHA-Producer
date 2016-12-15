@@ -33,6 +33,7 @@ public class InfosystemControllerTest {
   public void save() {
     doReturn(ZonedDateTime.of(2016, 1, 1, 10, 11, 12, 0, ZoneId.of("Europe/Tallinn"))).when(dateTimeService).now();
     controller.owner = "123";
+    controller.baseUrl = "http://base.url";
     doReturn(true).when(controller).isValid(any(Infosystem.class));
 
     controller.save(null, "name", "shortName", "docUrl");
@@ -45,13 +46,14 @@ public class InfosystemControllerTest {
     assertEquals("docUrl", infosystem.getDocumentation());
     assertEquals("123", infosystem.getOwner());
     assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
-    assertEquals("/123/shortName", infosystem.getMeta().getURI());
+    assertEquals("http://base.url/shortName", infosystem.getMeta().getURI());
   }
 
   @Test
   public void save_updatesExisting() {
     doReturn(ZonedDateTime.of(2016, 1, 1, 10, 11, 12, 0, ZoneId.of("Europe/Tallinn"))).when(dateTimeService).now();
     controller.owner = "123";
+    controller.baseUrl = "http://base.url";
     doReturn(true).when(controller).isValid(any(Infosystem.class));
 
     controller.save("existing-shortName", "name", "new-shortName", "docUrl");
@@ -64,7 +66,7 @@ public class InfosystemControllerTest {
     assertEquals("docUrl", infosystem.getDocumentation());
     assertEquals("123", infosystem.getOwner());
     assertEquals("2016-01-01T08:11:12", infosystem.getStatus().getTimestamp());
-    assertEquals("/123/new-shortName", infosystem.getMeta().getURI());
+    assertEquals("http://base.url/new-shortName", infosystem.getMeta().getURI());
   }
 
   @Test
@@ -103,15 +105,15 @@ public class InfosystemControllerTest {
 
   @Test
   public void isValid() {
-    assertTrue(controller.isValid(new Infosystem("name", "shortName", "docUrl", "12345", "2016-12-10T01:00:00")));
+    assertTrue(controller.isValid(new Infosystem("name", "shortName", "docUrl", "12345", "2016-12-10T01:00:00", "http://base.url")));
 
-    assertFalse(controller.isValid(new Infosystem("", "shortName", "docUrl", "12345", "2016-12-10T01:00:00")));
-    assertFalse(controller.isValid(new Infosystem("name", "", "docUrl", "12345", "2016-12-10T01:00:00")));
-    assertFalse(controller.isValid(new Infosystem("name", "shortName", "", "12345", "2016-12-10T01:00:00")));
-    assertFalse(controller.isValid(new Infosystem("name", "shortName", "docUrl", "", "2016-12-10T01:00:00")));
-    assertFalse(controller.isValid(new Infosystem("name", "shortName", "docUrl", "12345", "")));
-    assertFalse(controller.isValid(new Infosystem("    ", "   ", "   ", "   ", "  ")));
-    assertFalse(controller.isValid(new Infosystem(null, null, null, null, null)));
+    assertFalse(controller.isValid(new Infosystem("", "shortName", "docUrl", "12345", "2016-12-10T01:00:00", "http://base.url")));
+    assertFalse(controller.isValid(new Infosystem("name", "", "docUrl", "12345", "2016-12-10T01:00:00", "http://base.url")));
+    assertFalse(controller.isValid(new Infosystem("name", "shortName", "", "12345", "2016-12-10T01:00:00", "http://base.url")));
+    assertFalse(controller.isValid(new Infosystem("name", "shortName", "docUrl", "", "2016-12-10T01:00:00", "http://base.url")));
+    assertFalse(controller.isValid(new Infosystem("name", "shortName", "docUrl", "12345", "", "http://base.url")));
+    assertFalse(controller.isValid(new Infosystem("    ", "   ", "   ", "   ", "  ", "http://base.url")));
+    assertFalse(controller.isValid(new Infosystem(null, null, null, null, null, "http://base.url")));
   }
 
   @Test

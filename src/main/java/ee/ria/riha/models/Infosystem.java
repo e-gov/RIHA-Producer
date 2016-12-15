@@ -13,23 +13,23 @@ public class Infosystem {
   Status status;
   Meta meta;
 
-  public Infosystem(String name, String shortName, String documentation, String owner, String statusTimestamp) {
+  public Infosystem(String name, String shortName, String documentation, String owner, String statusTimestamp, String baseUrl) {
     this.name = name;
     this.shortname = shortName;
     this.documentation = documentation;
     this.owner = owner;
     this.status = new Status(statusTimestamp);
-    this.meta = new Meta();
+    this.meta = new Meta(baseUrl);
   }
 
-  public Infosystem(JSONObject jsonObject) {
+  public Infosystem(JSONObject jsonObject, String baseUrl) {
     this(
       getPropertyValue(jsonObject, "name"),
       getPropertyValue(jsonObject, "shortname"),
       getPropertyValue(jsonObject, "documentation"),
       getPropertyValue(jsonObject, "owner"),
-      jsonObject.has("status") ? getPropertyValue(jsonObject.getJSONObject("status"), "timestamp") : null
-    );
+      jsonObject.has("status") ? getPropertyValue(jsonObject.getJSONObject("status"), "timestamp") : null,
+      baseUrl);
   }
 
   private static String getPropertyValue(JSONObject jsonObject, String name) {
@@ -42,11 +42,17 @@ public class Infosystem {
     String timestamp;
   }
 
-  @AllArgsConstructor
   public class Meta {
+
+    String baseUrl;
+
+    public Meta(String baseUri) {
+      this.baseUrl = baseUri;
+    }
+
     public String getURI() {
-      if (owner == null || shortname == null) return null;
-      return "/" + owner + "/" + shortname;
+      if (shortname == null) return null;
+      return baseUrl + "/" + shortname;
     };
   }
 }

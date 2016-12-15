@@ -33,10 +33,10 @@ public class InfosystemStorageServiceTest {
   public void updateExistingInfosystem() throws IOException {
     Files.write(service.filePath, "[{\"shortname\":\"existing-short-name\"}]".getBytes());
 
-    service.save("existing-short-name", new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
+    service.save("existing-short-name", new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp", "http://base.url"));
 
     JSONAssert.assertEquals("[{\"owner\":\"ownerCode\"," +
-      "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
+      "\"meta\":{\"URI\":\"http://base.url/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"," +
       "\"shortname\":\"short-name\"," +
@@ -47,10 +47,10 @@ public class InfosystemStorageServiceTest {
   public void save() throws IOException {
     doReturn("[]").when(service).load();
 
-    service.save(null, new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
+    service.save(null, new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp", "http://base.url"));
 
     JSONAssert.assertEquals("[{\"owner\":\"ownerCode\"," +
-      "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
+      "\"meta\":{\"URI\":\"http://base.url/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"," +
       "\"shortname\":\"short-name\"," +
@@ -61,11 +61,11 @@ public class InfosystemStorageServiceTest {
   public void save_mergesWithExistingInfosystems() throws IOException {
     Files.write(service.filePath, "[{\"name\":\"existing-system-name\"}]".getBytes());
 
-    service.save(null, new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp"));
+    service.save(null, new Infosystem("name", "short-name", "http://doc.url", "ownerCode", "status-timestamp", "http://base.url"));
 
     JSONAssert.assertEquals("[{\"name\":\"existing-system-name\"}," +
       "{\"owner\":\"ownerCode\"," +
-      "\"meta\":{\"URI\":\"/ownerCode/short-name\"}," +
+      "\"meta\":{\"URI\":\"http://base.url/short-name\"}," +
       "\"documentation\":\"http://doc.url\"," +
       "\"name\":\"name\"" +
       ",\"shortname\":\"short-name\"," +
