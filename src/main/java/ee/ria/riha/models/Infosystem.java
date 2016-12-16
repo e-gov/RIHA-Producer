@@ -27,6 +27,27 @@ public class Infosystem {
     this.uri = buildUri(baseUrl, shortName);
   }
 
+  @Getter
+  @AllArgsConstructor
+  public class SystemStatus {
+    String timestamp;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public class Owner {
+    String code;
+  }
+
+  @Getter
+  public class Meta {
+    SystemStatus system_status;
+
+    Meta(String statusTimestamp) {
+      this.system_status = new SystemStatus(statusTimestamp);
+    }
+  }
+
   public Infosystem(JSONObject jsonObject, String baseUrl) {
     this(
       getPropertyValue(jsonObject, "name"),
@@ -52,26 +73,5 @@ public class Infosystem {
 
   private static String getPropertyValue(JSONObject jsonObject, String name) {
     return jsonObject.has(name) ? jsonObject.getString(name) : null;
-  }
-
-  @Getter
-  @AllArgsConstructor
-  public class SystemStatus {
-    String timestamp;
-  }
-
-  @Getter
-  @AllArgsConstructor
-  public class Owner {
-    String code;
-  }
-
-  @Getter
-  public class Meta {
-    SystemStatus system_status;
-
-    Meta(String statusTimestamp) {
-      this.system_status = new SystemStatus(statusTimestamp);
-    }
   }
 }
