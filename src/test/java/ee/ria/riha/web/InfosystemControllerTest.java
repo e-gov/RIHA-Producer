@@ -1,8 +1,8 @@
-package ee.ria.riha.controllers;
+package ee.ria.riha.web;
 
-import ee.ria.riha.models.Infosystem;
-import ee.ria.riha.services.DateTimeService;
-import ee.ria.riha.services.InfosystemStorageService;
+import ee.ria.riha.domain.model.Infosystem;
+import ee.ria.riha.service.DateTimeService;
+import ee.ria.riha.service.InfosystemStorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

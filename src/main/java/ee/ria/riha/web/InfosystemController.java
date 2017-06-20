@@ -1,8 +1,8 @@
-package ee.ria.riha.controllers;
+package ee.ria.riha.web;
 
-import ee.ria.riha.models.Infosystem;
-import ee.ria.riha.services.DateTimeService;
-import ee.ria.riha.services.InfosystemStorageService;
+import ee.ria.riha.domain.model.Infosystem;
+import ee.ria.riha.service.DateTimeService;
+import ee.ria.riha.service.InfosystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static ee.ria.riha.services.DateTimeService.format;
-import static ee.ria.riha.services.DateTimeService.toUTC;
+import static ee.ria.riha.service.DateTimeService.format;
+import static ee.ria.riha.service.DateTimeService.toUTC;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 

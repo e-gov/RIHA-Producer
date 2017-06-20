@@ -1,6 +1,6 @@
-package ee.ria.riha.services;
+package ee.ria.riha.service;
 
-import ee.ria.riha.models.Infosystem;
+import ee.ria.riha.domain.model.Infosystem;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;

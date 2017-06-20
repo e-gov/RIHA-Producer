@@ -1,4 +1,4 @@
-package ee.ria.riha.services;
+package ee.ria.riha.service;
 
 import org.springframework.stereotype.Service;
 

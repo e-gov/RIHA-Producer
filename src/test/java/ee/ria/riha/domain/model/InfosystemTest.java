@@ -1,4 +1,4 @@
-package ee.ria.riha.models;
+package ee.ria.riha.domain.model;
 
 import org.json.JSONObject;
 import org.junit.Test;

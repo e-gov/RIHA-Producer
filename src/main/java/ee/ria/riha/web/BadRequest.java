@@ -1,4 +1,4 @@
-package ee.ria.riha.controllers;
+package ee.ria.riha.web;
 
 public class BadRequest extends RuntimeException {
   public BadRequest() {

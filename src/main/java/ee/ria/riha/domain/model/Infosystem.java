@@ -1,4 +1,4 @@
-package ee.ria.riha.models;
+package ee.ria.riha.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
