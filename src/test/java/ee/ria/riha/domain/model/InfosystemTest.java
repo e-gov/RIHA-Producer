@@ -4,87 +4,74 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class InfosystemTest {
 
-  @Test
-  public void allInfosystemPropertiesAreNotRequired() {
-    Infosystem infosystem = new Infosystem(new JSONObject("{\"owner\":{\"code\":\"123\"}}"), "http://base.url");
+    @Test
+    public void allInfoSystemPropertiesAreNotRequired() {
+        InfoSystem infoSystem = new InfoSystem(new JSONObject("{}"));
 
-    assertEquals("123", infosystem.getOwner().getCode());
-    assertNull(infosystem.getUri());
-    assertNull(infosystem.getDocumentation());
-    assertNull(infosystem.getName());
-    assertNull(infosystem.getShortname());
-    assertNull(infosystem.getMeta().getSystem_status().getTimestamp());
-  }
+        assertNull(infoSystem.getId());
+        assertNull(infoSystem.getUuid());
+        assertNull(infoSystem.getOwnerCode());
+        assertNull(infoSystem.getOwnerName());
+    }
 
-  @Test
-  public void deserializeFromJson() {
-    String json =
-      "{" +
-        "  \"name\": \"Rebaste register\"," +
-        "  \"shortname\": \"fox\"," +
-        "  \"owner\": {" +
-        "    \"code\": \"12345\"," +
-        "  }," +
-        "  \"documentation\": \"http://riha.eesti.ee\"," +
-        "  \"meta\": {" +
-        "    \"system_status\": {" +
-        "      \"timestamp\": \"2016-12-13T17:10:20.785\"" +
-        "    }" +
-        "  }," +
-        "  \"uri\": \"http://base.url/fox\"" +
-        "}";
+    @Test
+    public void deserializeFromJson() {
+        //language=JSON
+        String json =
+                "{\n" +
+                        "  \"name\": \"Rebaste register\",\n" +
+                        "  \"shortname\": \"fox\",\n" +
+                        "  \"owner\": {\n" +
+                        "    \"code\": \"12345\",\n" +
+                        "    \"name\": \"Rebane\"\n" +
+                        "  },\n" +
+                        "  \"main_resource_id\": 357,\n" +
+                        "  \"documentation\": \"http://riha.eesti.ee\",\n" +
+                        "  \"meta\": {\n" +
+                        "    \"system_status\": {\n" +
+                        "      \"timestamp\": \"2016-12-13T17:10:20.785\"\n" +
+                        "    }\n" +
+                        "  },\n" +
+                        "  \"uri\": \"http://base.url/fox\",\n" +
+                        "  \"uuid\": \"53524f32-b732-4ce6-99a8-448d931d870d\"\n" +
+                        "}";
 
-    Infosystem infosystem = new Infosystem(new JSONObject(json), "http://base.url");
+        InfoSystem infoSystem = new InfoSystem(new JSONObject(json));
 
-    assertEquals("12345", infosystem.getOwner().getCode());
-    assertEquals("http://base.url/fox", infosystem.getUri());
-    assertEquals("http://riha.eesti.ee", infosystem.getDocumentation());
-    assertEquals("Rebaste register", infosystem.getName());
-    assertEquals("fox", infosystem.getShortname());
-    assertEquals("2016-12-13T17:10:20.785", infosystem.getMeta().getSystem_status().getTimestamp());
-  }
+        assertEquals((Integer) 357, infoSystem.getId());
+        assertEquals(UUID.fromString("53524f32-b732-4ce6-99a8-448d931d870d"), infoSystem.getUuid());
+        assertEquals("12345", infoSystem.getOwnerCode());
+        assertEquals("Rebane", infoSystem.getOwnerName());
+    }
 
-  @Test
-  public void serializeToJson() {
-    String expectedJson =
-      "{" +
-      "  \"name\": \"Eesti kirikute, koguduste ja koguduste liitude register\"," +
-      "  \"shortname\": \"Eesti kirikuregister\"," +
-      "  \"owner\": {" +
-      "    \"code\": \"70000562\"" +
-      "  }," +
-      "  \"documentation\": \"eesti_kirikute_koguduste_ja_koguduste_liitude_register\"," +
-      "  \"meta\": {" +
-      "    \"system_status\": {" +
-      "      \"timestamp\": \"2015-09-05T00:36:26.255215\"" +
-      "    }" +
-      "  }," +
-      "  \"uri\": \"http://base.url/Eesti%20kirikuregister\"" +
-      "}";
+    @Test
+    public void setsProperties() {
+        //language=JSON
+        String expectedJson = "{\n" +
+                "  \"owner\":\n" +
+                "  {\n" +
+                "    \"code\": \"123\",\n" +
+                "    \"name\": \"Rebane\"\n" +
+                "  },\n" +
+                "  \"main_resource_id\": 357,\n" +
+                "  \"uuid\": \"53524f32-b732-4ce6-99a8-448d931d870d\"\n" +
+                "}";
 
-    Infosystem infosystem = new Infosystem(
-      "Eesti kirikute, koguduste ja koguduste liitude register",
-      "Eesti kirikuregister",
-      "eesti_kirikute_koguduste_ja_koguduste_liitude_register",
-      "70000562",
-      "2015-09-05T00:36:26.255215",
-      "http://base.url");
+        InfoSystem infoSystem = new InfoSystem("{}");
 
-    JSONAssert.assertEquals(expectedJson, new JSONObject(infosystem).toString(), true);
-  }
+        infoSystem.setId(357);
+        infoSystem.setUuid(UUID.fromString("53524f32-b732-4ce6-99a8-448d931d870d"));
+        infoSystem.setOwnerCode("123");
+        infoSystem.setOwnerName("Rebane");
 
-  @Test
-  public void buildUri() {
-    assertNull(Infosystem.buildUri("http://base.url", null));
-    assertEquals("http://base.url/foobar", Infosystem.buildUri("http://base.url", "foobar"));
-    assertEquals("http://base.url/Eesti%20kirikuregister", Infosystem.buildUri("http://base.url", "Eesti kirikuregister"));
-    assertEquals("https://base.url/Eesti%20kirikuregister", Infosystem.buildUri("https://base.url", "Eesti kirikuregister"));
-    assertEquals("http://base.url/%C3%95ppurite%20register", Infosystem.buildUri("http://base.url", "Õppurite register"));
-    assertEquals("http://base.url/K%C3%A4%C3%A4rik%C3%B5%20suusah%C3%BCppeb%C3%B6%C3%B6s", Infosystem.buildUri("http://base.url", "Käärikõ suusahüppeböös"));
-  }
+        JSONAssert.assertEquals(new JSONObject(expectedJson), infoSystem.getJsonObject(), false);
+    }
+
 }
