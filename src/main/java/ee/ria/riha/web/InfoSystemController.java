@@ -28,14 +28,14 @@ public class InfoSystemController {
 
     @PostMapping
     public ResponseEntity create(@RequestBody InfoSystemModel model) {
-        InfoSystem is = infoSystemService.create(new InfoSystem(model.getRaw()));
+        InfoSystem is = infoSystemService.create(new InfoSystem(model.getJson()));
         return ResponseEntity.ok(createModel(is));
     }
 
     private InfoSystemModel createModel(InfoSystem infoSystem) {
         InfoSystemModel model = new InfoSystemModel();
         model.setId(infoSystem.getId());
-        model.setRaw(infoSystem.getJsonObject().toString());
+        model.setJson(infoSystem.getJsonObject().toString());
 
         return model;
     }

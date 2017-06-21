@@ -21,23 +21,23 @@ public class InfoSystemModel {
     private Integer id;
 
     @JsonIgnore
-    private String raw;
+    private String json;
 
     @JsonRawValue
     public String getDetails() {
-        return raw;
+        return json;
     }
 
     @JsonSetter
     public void setDetails(JsonNode raw) {
-        this.raw = raw.toString();
+        this.json = raw.toString();
     }
 
-    public String getRaw() {
-        return this.raw;
+    public String getJson() {
+        return this.json;
     }
 
-    public void setRaw(String description) {
-        this.raw = description;
+    public void setJson(String description) {
+        this.json = description;
     }
 }
