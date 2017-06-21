@@ -1,7 +1,8 @@
 package ee.ria.riha.service;
 
 /**
- * {@link MetaDataProvider} that is aware of application context.
+ * {@link MetaDataProvider} that is aware of application context. Used when application is accessed by users from
+ * multiple organizations.
  *
  * @author Valentin Suhnjov
  */

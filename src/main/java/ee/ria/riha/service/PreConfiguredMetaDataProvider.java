@@ -1,7 +1,7 @@
 package ee.ria.riha.service;
 
 /**
- * Preconfigured {@link MetaDataProvider}
+ * Preconfigured {@link MetaDataProvider}. Used when application is self hosted.
  *
  * @author Valentin Suhnjov
  */

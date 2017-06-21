@@ -1,7 +1,7 @@
 package ee.ria.riha.service;
 
 /**
- * Provides meta data about InfoSystem that belong to current domain.
+ * Provides various information about application and user. Intended to use when creating information systems.
  *
  * @author Valentin Suhnjov
  */
