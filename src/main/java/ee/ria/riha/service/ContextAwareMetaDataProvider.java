@@ -15,7 +15,7 @@ public class ContextAwareMetaDataProvider implements MetaDataProvider {
 
     @Override
     public String getOwnerName() {
-        return "anonymous";
+        return "Rebane";
     }
 
 }
