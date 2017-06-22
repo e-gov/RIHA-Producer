@@ -35,4 +35,15 @@ public class InfoSystemService {
         return infoSystemRepository.get(id);
     }
 
+    public InfoSystem update(Long id, InfoSystem model) {
+        InfoSystem existingInfoSystem = get(id);
+
+        InfoSystem updatedInfoSystem = new InfoSystem(model.getJsonObject());
+        updatedInfoSystem.setUuid(existingInfoSystem.getUuid());
+        updatedInfoSystem.setOwnerCode(existingInfoSystem.getOwnerCode());
+        updatedInfoSystem.setOwnerName(existingInfoSystem.getOwnerName());
+
+        List<Long> ids = infoSystemRepository.add(updatedInfoSystem);
+        return get(ids.get(0));
+    }
 }

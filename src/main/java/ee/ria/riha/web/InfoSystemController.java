@@ -41,8 +41,9 @@ public class InfoSystemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable("id") String id, @RequestBody InfoSystem model) {
-        return ResponseEntity.badRequest().body("Not implemented");
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody InfoSystemModel model) {
+        InfoSystem infoSystem = infoSystemService.update(id, new InfoSystem(model.getJson()));
+        return ResponseEntity.ok(createModel(infoSystem));
     }
 
     @DeleteMapping(value = "/{id}")
