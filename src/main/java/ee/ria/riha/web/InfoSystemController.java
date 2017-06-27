@@ -2,11 +2,16 @@ package ee.ria.riha.web;
 
 import ee.ria.riha.domain.model.InfoSystem;
 import ee.ria.riha.service.InfoSystemService;
+import ee.ria.riha.storage.util.Filterable;
+import ee.ria.riha.storage.util.Pageable;
+import ee.ria.riha.storage.util.PagedResponse;
 import ee.ria.riha.web.model.InfoSystemModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/systems")
@@ -16,8 +21,15 @@ public class InfoSystemController {
     private InfoSystemService infoSystemService;
 
     @GetMapping
-    public ResponseEntity list() {
-        return ResponseEntity.badRequest().body("Not implemented yet");
+    public ResponseEntity list(Pageable pageable, Filterable filterable) {
+        PagedResponse<InfoSystem> list = infoSystemService.list(pageable, filterable);
+        return ResponseEntity.ok(createPagedModel(pageable, list));
+    }
+
+    private PagedResponse<InfoSystemModel> createPagedModel(Pageable pageable, PagedResponse<InfoSystem> list) {
+        return new PagedResponse<>(pageable, list.getTotalElements(), list.getContent().stream()
+                .map(this::createModel)
+                .collect(toList()));
     }
 
     @GetMapping("/{id}")
