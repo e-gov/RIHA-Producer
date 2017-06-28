@@ -7,7 +7,6 @@ Metadata Producer can be installed and run in multiple instances, independently,
 
 ## Prerequisites
 - java8
-- npm
 - maven
 
 ## Packaging
