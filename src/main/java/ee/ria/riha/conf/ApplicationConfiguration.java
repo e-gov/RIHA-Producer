@@ -7,6 +7,7 @@ import ee.ria.riha.service.ContextAwareMetaDataProvider;
 import ee.ria.riha.service.MetaDataProvider;
 import ee.ria.riha.service.PreConfiguredMetaDataProvider;
 import ee.ria.riha.storage.client.StorageClient;
+import ee.ria.riha.storage.domain.MainResourceRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,14 @@ public class ApplicationConfiguration {
             return new FileInfoSystemRepository();
         }
 
-        return new RihaStorageInfoSystemRepository(getStorageClient(applicationProperties));
+        MainResourceRepository mainResourceRepository = new MainResourceRepository(
+                getStorageClient(applicationProperties));
+        return new RihaStorageInfoSystemRepository(mainResourceRepository);
+    }
+
+    private StorageClient getStorageClient(ApplicationProperties applicationProperties) {
+        RestTemplate restTemplate = new RestTemplate();
+        return new StorageClient(restTemplate, applicationProperties.getStorageClient().getBaseUrl());
     }
 
     @Bean
@@ -38,8 +46,4 @@ public class ApplicationConfiguration {
         return new ContextAwareMetaDataProvider();
     }
 
-    private StorageClient getStorageClient(ApplicationProperties applicationProperties) {
-        RestTemplate restTemplate = new RestTemplate();
-        return new StorageClient(restTemplate, applicationProperties.getStorageClient().getBaseUrl());
-    }
 }

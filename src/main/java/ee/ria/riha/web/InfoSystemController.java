@@ -3,6 +3,7 @@ package ee.ria.riha.web;
 import ee.ria.riha.domain.model.InfoSystem;
 import ee.ria.riha.service.InfoSystemService;
 import ee.ria.riha.storage.util.Filterable;
+import ee.ria.riha.storage.util.PageRequest;
 import ee.ria.riha.storage.util.Pageable;
 import ee.ria.riha.storage.util.PagedResponse;
 import ee.ria.riha.web.model.InfoSystemModel;
@@ -23,13 +24,15 @@ public class InfoSystemController {
     @GetMapping
     public ResponseEntity list(Pageable pageable, Filterable filterable) {
         PagedResponse<InfoSystem> list = infoSystemService.list(pageable, filterable);
-        return ResponseEntity.ok(createPagedModel(pageable, list));
+        return ResponseEntity.ok(createPagedModel(list));
     }
 
-    private PagedResponse<InfoSystemModel> createPagedModel(Pageable pageable, PagedResponse<InfoSystem> list) {
-        return new PagedResponse<>(pageable, list.getTotalElements(), list.getContent().stream()
-                .map(this::createModel)
-                .collect(toList()));
+    private PagedResponse<InfoSystemModel> createPagedModel(PagedResponse<InfoSystem> list) {
+        return new PagedResponse<>(new PageRequest(list.getPage(), list.getSize()),
+                                   list.getTotalElements(),
+                                   list.getContent().stream()
+                                           .map(this::createModel)
+                                           .collect(toList()));
     }
 
     @GetMapping("/{id}")

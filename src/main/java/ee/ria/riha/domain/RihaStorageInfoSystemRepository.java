@@ -1,8 +1,10 @@
 package ee.ria.riha.domain;
 
 import ee.ria.riha.domain.model.InfoSystem;
-import ee.ria.riha.storage.client.StorageClient;
+import ee.ria.riha.storage.domain.MainResourceRepository;
+import ee.ria.riha.storage.domain.model.MainResource;
 import ee.ria.riha.storage.util.Filterable;
+import ee.ria.riha.storage.util.PageRequest;
 import ee.ria.riha.storage.util.Pageable;
 import ee.ria.riha.storage.util.PagedResponse;
 
@@ -16,24 +18,23 @@ import java.util.stream.Collectors;
  */
 public class RihaStorageInfoSystemRepository implements InfoSystemRepository {
 
-    private static final String MAIN_RESOURCE_PATH = "db/main_resource";
     private static final String NOT_IMPLEMENTED = "Not implemented";
 
-    private final StorageClient storageClient;
+    private final MainResourceRepository mainResourceRepository;
 
-    public RihaStorageInfoSystemRepository(StorageClient storageClient) {
-        this.storageClient = storageClient;
+    public RihaStorageInfoSystemRepository(MainResourceRepository mainResourceRepository) {
+        this.mainResourceRepository = mainResourceRepository;
     }
 
     @Override
     public List<Long> add(InfoSystem infoSystem) {
-        return storageClient.create(MAIN_RESOURCE_PATH, infoSystem.getJsonObject().toString());
+        return mainResourceRepository.add(new MainResource(infoSystem.getJsonObject()));
     }
 
     @Override
     public InfoSystem get(Long id) {
-        String infoSystem = storageClient.get(MAIN_RESOURCE_PATH, id);
-        return infoSystem != null && !infoSystem.isEmpty() ? new InfoSystem(infoSystem) : null;
+        MainResource mainResource = mainResourceRepository.get(id);
+        return mainResource != null ? new InfoSystem(mainResource.getJsonObject()) : null;
     }
 
     @Override
@@ -48,20 +49,13 @@ public class RihaStorageInfoSystemRepository implements InfoSystemRepository {
 
     @Override
     public PagedResponse<InfoSystem> list(Pageable pageable, Filterable filterable) {
-        PagedResponse<InfoSystem> response = new PagedResponse<>(pageable);
+        PagedResponse<MainResource> mainResourcePagedResponse = mainResourceRepository.list(pageable, filterable);
 
-        long totalElements = storageClient.count(MAIN_RESOURCE_PATH, filterable.getFilter());
-        response.setTotalElements(totalElements);
-
-        if (totalElements > 0) {
-            List<String> descriptions = storageClient.find(MAIN_RESOURCE_PATH, pageable.getPageSize(),
-                                                           pageable.getOffset(), filterable.getFilter(),
-                                                           filterable.getSort(), filterable.getFields());
-            response.setContent(descriptions.stream()
-                                        .map(InfoSystem::new)
-                                        .collect(Collectors.toList()));
-        }
-
-        return response;
+        return new PagedResponse<>(
+                new PageRequest(mainResourcePagedResponse.getPage(), mainResourcePagedResponse.getSize()),
+                mainResourcePagedResponse.getTotalElements(),
+                mainResourcePagedResponse.getContent().stream()
+                        .map(mr -> new InfoSystem(mr.getJsonObject()))
+                        .collect(Collectors.toList()));
     }
 }
