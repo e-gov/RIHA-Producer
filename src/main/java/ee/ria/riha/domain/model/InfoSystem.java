@@ -60,6 +60,10 @@ public class InfoSystem {
         return builder.build();
     }
 
+    public String asJson() {
+        return jsonObject.toString();
+    }
+
     public JSONObject getJsonObject() {
         return jsonObject;
     }

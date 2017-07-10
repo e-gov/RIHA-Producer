@@ -1,7 +1,10 @@
 package ee.ria.riha.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import ee.ria.riha.domain.model.InfoSystem;
 import ee.ria.riha.service.InfoSystemService;
+import ee.ria.riha.service.JsonValidationException;
 import ee.ria.riha.storage.util.Filterable;
 import ee.ria.riha.storage.util.PageRequest;
 import ee.ria.riha.storage.util.Pageable;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -77,5 +82,13 @@ public class InfoSystemController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleAppException(BadRequest e) {
         return e.getMessage();
+    }
+
+    @ExceptionHandler(JsonValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public List<JsonNode> handleJsonValidationException(JsonValidationException e) {
+        return e.getMessages().stream()
+                .map(ProcessingMessage::asJson)
+                .collect(toList());
     }
 }
