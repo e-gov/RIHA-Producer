@@ -76,7 +76,7 @@
           "type": "object",
           "description": "Süsteemi olek"
         },
-        "x-road_status": {
+        "x_road_status": {
           "properties": {
             "status": {
               "description": "Kas infosüsteem on X-teega liidestatud",
