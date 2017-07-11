@@ -32,7 +32,7 @@
       "type": "array"
     },
     "homepage": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "URL, mis viitab infosüsteemi avalikule kasutajaliidesele"
     },
     "meta": {
@@ -41,10 +41,10 @@
           "properties": {
             "status": {
               "description": "Staatuse tekstiline kirjeldus: kooskõlastatud / mitte kooskõlastatud",
-              "type": "string"
+              "type": ["string", "null"]
             },
             "timestamp": {
-              "type": "string",
+              "type": ["string", "null"],
               "format": "date-time",
               "description": "Staatuse saamise aeg"
             }
@@ -58,18 +58,18 @@
           "format": "date-time"
         },
         "development_status": {
-          "type": "string",
+          "type": ["string", "null"],
           "description": "Infosüsteemi arendamise tekstiline kirjeldus: aktiivses arenduses / ei ole aktiivses arenduses"
         },
         "system_status": {
           "properties": {
             "status": {
               "description": "Infosüsteemi staatuse tekstiline kirjeldus: kasutusel, asutamisel, lõpetatud",
-              "type": "string"
+              "type": ["string", "null"]
             },
             "timestamp": {
               "description": "Staatuse saamise aeg -  millal infosüsteem kasutusele võeti, lõpetati või arendama (asutama) hakati",
-              "type": "string",
+              "type": ["string", "null"],
               "format": "date-time"
             }
           },
@@ -80,11 +80,11 @@
           "properties": {
             "status": {
               "description": "Kas infosüsteem on X-teega liidestatud",
-              "type": "string"
+              "type": ["string", "null"]
             },
             "timestamp": {
               "description": "Millisest ajast alates on infosüsteem X-teega liidestatud",
-              "type": "string",
+              "type": ["string", "null"],
               "format": "date-time"
             }
           },
@@ -125,10 +125,13 @@
           },
           "name": {
             "description": "Õigusakti nimi",
-            "type": "string"
+            "type": ["string", "null"]
           }
         },
-        "type": "object"
+        "type": "object",
+        "required": [
+          "url"
+        ]
       },
       "type": "array"
     },
