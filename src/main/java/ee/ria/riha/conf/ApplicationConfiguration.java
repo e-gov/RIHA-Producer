@@ -1,9 +1,11 @@
 package ee.ria.riha.conf;
 
+import com.github.fge.jackson.JsonLoader;
 import ee.ria.riha.domain.FileInfoSystemRepository;
 import ee.ria.riha.domain.InfoSystemRepository;
 import ee.ria.riha.domain.RihaStorageInfoSystemRepository;
 import ee.ria.riha.service.ContextAwareMetaDataProvider;
+import ee.ria.riha.service.JsonValidationService;
 import ee.ria.riha.service.MetaDataProvider;
 import ee.ria.riha.service.PreConfiguredMetaDataProvider;
 import ee.ria.riha.storage.client.StorageClient;
@@ -12,6 +14,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 /**
  * @author Valentin Suhnjov
@@ -46,4 +50,9 @@ public class ApplicationConfiguration {
         return new ContextAwareMetaDataProvider();
     }
 
+    @Bean
+    public JsonValidationService jsonValidationService(ApplicationProperties applicationProperties) throws IOException {
+        return new JsonValidationService(
+                JsonLoader.fromResource(applicationProperties.getInfoSystemValidation().getSchemaUrl()));
+    }
 }

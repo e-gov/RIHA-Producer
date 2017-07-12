@@ -14,22 +14,27 @@ import java.util.List;
 @ConfigurationProperties(prefix = "producer")
 public class ApplicationProperties {
 
-    private final Meta meta = new Meta();
-    private final StorageClient storageClient = new StorageClient();
-    private final Security security = new Security();
+    private final MetaProperties meta = new MetaProperties();
+    private final StorageClientProperties storageClient = new StorageClientProperties();
+    private final SecurityProperties security = new SecurityProperties();
+    private final InfoSystemValidationProperties infoSystemValidation = new InfoSystemValidationProperties();
 
     private boolean selfHosted = true;
 
-    public Meta getMeta() {
+    public MetaProperties getMeta() {
         return meta;
     }
 
-    public StorageClient getStorageClient() {
+    public StorageClientProperties getStorageClient() {
         return storageClient;
     }
 
-    public Security getSecurity() {
+    public SecurityProperties getSecurity() {
         return security;
+    }
+
+    public InfoSystemValidationProperties getInfoSystemValidation() {
+        return infoSystemValidation;
     }
 
     public boolean isSelfHosted() {
@@ -40,7 +45,7 @@ public class ApplicationProperties {
         this.selfHosted = selfHosted;
     }
 
-    public static class Meta {
+    public static class MetaProperties {
 
         private String ownerCode;
         private String ownerName;
@@ -62,7 +67,7 @@ public class ApplicationProperties {
         }
     }
 
-    public static class StorageClient {
+    public static class StorageClientProperties {
 
         @NotEmpty
         private String baseUrl;
@@ -88,11 +93,23 @@ public class ApplicationProperties {
         }
     }
 
-    public static class Security {
+    public static class SecurityProperties {
         private final Cors cors = new Cors();
 
         public Cors getCors() {
             return cors;
+        }
+    }
+
+    public static class InfoSystemValidationProperties {
+        private String schemaUrl;
+
+        public String getSchemaUrl() {
+            return schemaUrl;
+        }
+
+        public void setSchemaUrl(String schemaUrl) {
+            this.schemaUrl = schemaUrl;
         }
     }
 }
