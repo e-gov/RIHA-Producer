@@ -1,7 +1,5 @@
 package ee.ria.riha.domain;
 
-import ee.ria.riha.domain.FileInfoSystemRepository;
-import ee.ria.riha.domain.InfoSystemRepositoryException;
 import ee.ria.riha.domain.model.InfoSystem;
 import org.junit.Test;
 

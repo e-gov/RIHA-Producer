@@ -22,6 +22,9 @@ public class InfoSystemService {
     private InfoSystemRepository infoSystemRepository;
 
     @Autowired
+    private JsonValidationService infoSystemValidationService;
+
+    @Autowired
     private MetaDataProvider metaDataProvider;
 
     /**
@@ -37,6 +40,8 @@ public class InfoSystemService {
         infoSystem.setUuid(UUID.randomUUID());
         infoSystem.setOwnerCode(metaDataProvider.getOwnerCode());
         infoSystem.setOwnerName(metaDataProvider.getOwnerName());
+
+        infoSystemValidationService.validate(infoSystem.asJson());
 
         List<Long> ids = infoSystemRepository.add(infoSystem);
         return get(ids.get(0));
@@ -66,6 +71,8 @@ public class InfoSystemService {
         updatedInfoSystem.setUuid(existingInfoSystem.getUuid());
         updatedInfoSystem.setOwnerCode(existingInfoSystem.getOwnerCode());
         updatedInfoSystem.setOwnerName(existingInfoSystem.getOwnerName());
+
+        infoSystemValidationService.validate(updatedInfoSystem.asJson());
 
         List<Long> ids = infoSystemRepository.add(updatedInfoSystem);
         return get(ids.get(0));

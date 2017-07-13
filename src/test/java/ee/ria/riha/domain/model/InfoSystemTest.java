@@ -9,7 +9,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class InfosystemTest {
+public class InfoSystemTest {
 
     @Test
     public void allInfoSystemPropertiesAreNotRequired() {
