@@ -137,7 +137,8 @@
     },
     "short_name": {
       "description": "Infosüsteemi lühinimi",
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-zA-ZõÕäÄöÖüÜ0-9.-]*$"
     },
     "topics": {
       "items": {

@@ -91,4 +91,38 @@ public class JsonValidationServiceTest {
         }
     }
 
+    @Test
+    public void catchesErrorsInRegexPatternValidatedFields() {
+        //language=JSON
+        String json = "{\n" +
+                "  \"name\": \"regex validation test\",\n" +
+                "  \"uuid\": \"00000000-0000-0000-0000-000000000000\",\n" +
+                "  \"short_name\": \"underscores_are_not_valid\"\n" +
+                "}";
+
+        ProcessingReport report = infoSystemValidationService.validate(json, false);
+
+        assertThat(report.isSuccess(), equalTo(false));
+        for (ProcessingMessage message : report) {
+            JSONAssert.assertEquals("{\n" +
+                                            "  \"keyword\": \"pattern\",\n" +
+                                            "  \"string\": \"underscores_are_not_valid\"\n" +
+                                            "}", message.asJson().toString(), false);
+        }
+    }
+
+    @Test
+    public void successfullyValidatesRegexPatternValidatedFields() {
+        //language=JSON
+        String json = "{\n" +
+                "  \"name\": \"regex validation test\",\n" +
+                "  \"uuid\": \"00000000-0000-0000-0000-000000000000\",\n" +
+                "  \"short_name\": \"all-these.VALUES-allowed-õÕäÄöÖüÜ-0123456789\"\n" +
+                "}";
+
+        ProcessingReport report = infoSystemValidationService.validate(json, false);
+
+        assertThat(report.isSuccess(), equalTo(true));
+    }
+
 }
