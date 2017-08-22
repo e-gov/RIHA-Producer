@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class JsonValidationException extends RuntimeException {
 
-    private ProcessingReport processingReport;
+    private final ProcessingReport processingReport;
 
     public JsonValidationException(ProcessingReport processingReport) {
         this.processingReport = processingReport;
