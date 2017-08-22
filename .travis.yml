@@ -4,3 +4,22 @@ jdk:
 
 before_script:
         - npm install karma-jasmine karma-junit-reporter karma-jasmine-jquery karma-jasmine-ajax karma-coverage karma-phantomjs2-launcher 
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "q1zDx56fWdcotSq9I+sl6/qOBBEVCt7hM0ii2HLJMOB8ESHQVUa80lbLzR+4uI/nume08rf6m8kg4CUlTKWDQ7KznXT8hdy7dZ2UInovUxb8Nlo9vdlaV1A2Mesfbkb2yM6nTJnwCl/T/T79dGvH9arsENDZhJm6zcaFwgLrP2XHQA09AfezAwiRUWOpOXLm+Wi+HGc5yLXXOUQZPKXMvPgIlFN85rdg4JfesF9QyCtqS5/7fCHXNQVrrxUXQ+e5hE2OnADnBac2GE1/wJWsgtTe2fKeNQxU4HkTE1m8WHKGsV4gMBb94WJWyw9JNhb/cdnAY4GVLdh7F6YRQ3OmKCY9b5kr/ImEadFd6cTb6AeKqXPla1ek+4K6TUT2wdemASMwtXN3PUwzLiyCJHHX7kWBqAvsCLc+IDMJLfOodJi/rnzlq+YxkZsP6fyHnCxg7DClqWnCTUED1qI+otXYHnojQH+BPghrv9GCAwBb92LziHEHCknu/2B/Osn6rmgcczevcberGMrrBdFDUoVSNaEBQezIGbXOuYsQDKXMj1sQE0AQFvk3tVJ/6TMl4tYGGCGqfcenN1SvyDqZs1nGq2+Ugy9lZHCi4Lmhehc5R5i4ETe1IOm93OssEMdLNMDf5z4Bp+ehDU3x+KtFze6WqdUIbCVbUQhInyOZSSzqxyU="
+
+before_install:
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+addons:
+  coverity_scan:
+    project:
+      name: "e-gov/RIHA-Producer"
+      description: "Build submitted via Travis CI"
+    notification_email: hannes.kiivet@ria.ee
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile"
+    branch_pattern: master
