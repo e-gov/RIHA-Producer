@@ -14,13 +14,15 @@ import java.util.List;
  */
 public interface InfoSystemRepository {
 
-    List<Long> add(InfoSystem infoSystem);
+    InfoSystem add(InfoSystem infoSystem);
 
-    InfoSystem get(Long id);
+    InfoSystem load(String shortName);
 
-    void update(Long id, InfoSystem infoSystem);
+    void update(String shortName, InfoSystem infoSystem);
 
-    void remove(Long id);
+    void remove(String shortName);
 
     PagedResponse<InfoSystem> list(Pageable pageable, Filterable filterable);
+
+    List<InfoSystem> find(Filterable filterable);
 }

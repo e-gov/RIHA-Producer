@@ -1,12 +1,10 @@
 package ee.ria.riha.domain;
 
 import ee.ria.riha.domain.model.InfoSystem;
+import ee.ria.riha.service.ObjectNotFoundException;
 import ee.ria.riha.storage.domain.MainResourceRepository;
 import ee.ria.riha.storage.domain.model.MainResource;
-import ee.ria.riha.storage.util.Filterable;
-import ee.ria.riha.storage.util.PageRequest;
-import ee.ria.riha.storage.util.Pageable;
-import ee.ria.riha.storage.util.PagedResponse;
+import ee.ria.riha.storage.util.*;
 
 import java.util.List;
 import java.util.function.Function;
@@ -42,23 +40,33 @@ public class RihaStorageInfoSystemRepository implements InfoSystemRepository {
     }
 
     @Override
-    public List<Long> add(InfoSystem infoSystem) {
-        return mainResourceRepository.add(INFO_SYSTEM_TO_MAIN_RESOURCE.apply(infoSystem));
-    }
+    public InfoSystem add(InfoSystem infoSystem) {
+        List<Long> ids = mainResourceRepository.add(INFO_SYSTEM_TO_MAIN_RESOURCE.apply(infoSystem));
 
-    @Override
-    public InfoSystem get(Long id) {
-        MainResource mainResource = mainResourceRepository.get(id);
+        MainResource mainResource = mainResourceRepository.get(ids.get(0));
+
         return MAIN_RESOURCE_TO_INFO_SYSTEM.apply(mainResource);
     }
 
     @Override
-    public void update(Long id, InfoSystem infoSystem) {
+    public InfoSystem load(String shortName) {
+        FilterRequest filter = new FilterRequest("short_name,=," + shortName, null, null);
+        List<InfoSystem> infoSystems = find(filter);
+
+        if (infoSystems.isEmpty()) {
+            throw new ObjectNotFoundException("Could not resolve info system by short name " + shortName);
+        }
+
+        return infoSystems.get(0);
+    }
+
+    @Override
+    public void update(String shortName, InfoSystem infoSystem) {
         throw new RuntimeException(NOT_IMPLEMENTED);
     }
 
     @Override
-    public void remove(Long id) {
+    public void remove(String shortName) {
         throw new RuntimeException(NOT_IMPLEMENTED);
     }
 
@@ -72,5 +80,14 @@ public class RihaStorageInfoSystemRepository implements InfoSystemRepository {
                 mainResourcePagedResponse.getContent().stream()
                         .map(MAIN_RESOURCE_TO_INFO_SYSTEM)
                         .collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<InfoSystem> find(Filterable filterable) {
+        List<MainResource> mainResources = mainResourceRepository.find(filterable);
+
+        return mainResources.stream()
+                .map(MAIN_RESOURCE_TO_INFO_SYSTEM)
+                .collect(Collectors.toList());
     }
 }

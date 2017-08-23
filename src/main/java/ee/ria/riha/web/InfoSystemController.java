@@ -40,9 +40,9 @@ public class InfoSystemController {
                                            .collect(toList()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable("id") Long id) {
-        InfoSystem infoSystem = infoSystemService.get(id);
+    @GetMapping("/{shortName}")
+    public ResponseEntity get(@PathVariable("shortName") String shortName) {
+        InfoSystem infoSystem = infoSystemService.get(shortName);
         return ResponseEntity.ok(createModel(infoSystem));
     }
 
@@ -60,15 +60,15 @@ public class InfoSystemController {
         return model;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody InfoSystemModel model) {
-        InfoSystem infoSystem = infoSystemService.update(id, new InfoSystem(model.getJson()));
+    @PutMapping("/{shortName}")
+    public ResponseEntity update(@PathVariable("shortName") String shortName, @RequestBody InfoSystemModel model) {
+        InfoSystem infoSystem = infoSystemService.update(shortName, new InfoSystem(model.getJson()));
         return ResponseEntity.ok(createModel(infoSystem));
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{shortName}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity delete(@RequestParam("id") String shortName) {
+    public ResponseEntity delete(@RequestParam("shortName") String shortName) {
         return ResponseEntity.badRequest().body("Not implemented");
     }
 
