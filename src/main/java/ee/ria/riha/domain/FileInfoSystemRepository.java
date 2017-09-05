@@ -17,27 +17,32 @@ public class FileInfoSystemRepository implements InfoSystemRepository {
     private static final String NOT_IMPLEMENTED = "Not implemented";
 
     @Override
-    public List<Long> add(InfoSystem infoSystem) {
+    public InfoSystem add(InfoSystem infoSystem) {
         throw new InfoSystemRepositoryException(NOT_IMPLEMENTED);
     }
 
     @Override
-    public InfoSystem get(Long id) {
+    public InfoSystem load(String shortName) {
         throw new InfoSystemRepositoryException(NOT_IMPLEMENTED);
     }
 
     @Override
-    public void update(Long id, InfoSystem infoSystem) {
+    public void update(String shortName, InfoSystem infoSystem) {
         throw new InfoSystemRepositoryException(NOT_IMPLEMENTED);
     }
 
     @Override
-    public void remove(Long id) {
+    public void remove(String shortName) {
         throw new InfoSystemRepositoryException(NOT_IMPLEMENTED);
     }
 
     @Override
     public PagedResponse<InfoSystem> list(Pageable pageable, Filterable filterable) {
+        throw new InfoSystemRepositoryException(NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public List<InfoSystem> find(Filterable filterable) {
         throw new InfoSystemRepositoryException(NOT_IMPLEMENTED);
     }
 }

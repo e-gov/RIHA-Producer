@@ -9,7 +9,6 @@ import ee.ria.riha.storage.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,29 +42,28 @@ public class InfoSystemService {
 
         infoSystemValidationService.validate(infoSystem.asJson());
 
-        List<Long> ids = infoSystemRepository.add(infoSystem);
-        return get(ids.get(0));
+        return infoSystemRepository.add(infoSystem);
     }
 
     /**
-     * Retrieves {@link InfoSystem} by its id
+     * Retrieves {@link InfoSystem} by its short name
      *
-     * @param id an id of {@link InfoSystem}
+     * @param shortName info system short name
      * @return retrieved {@link InfoSystem}
      */
-    public InfoSystem get(Long id) {
-        return infoSystemRepository.get(id);
+    public InfoSystem get(String shortName) {
+        return infoSystemRepository.load(shortName);
     }
 
     /**
      * Creates new record with the same UUID and owner. Other parts of {@link InfoSystem} are updated from model.
      *
-     * @param id    an id of {@link InfoSystem}
-     * @param model updated {@link InfoSystem} model
+     * @param shortName info system short name
+     * @param model     updated {@link InfoSystem} model
      * @return new {@link InfoSystem}
      */
-    public InfoSystem update(Long id, InfoSystem model) {
-        InfoSystem existingInfoSystem = get(id);
+    public InfoSystem update(String shortName, InfoSystem model) {
+        InfoSystem existingInfoSystem = get(shortName);
 
         InfoSystem updatedInfoSystem = new InfoSystem(model.getJsonObject());
         updatedInfoSystem.setUuid(existingInfoSystem.getUuid());
@@ -74,8 +72,7 @@ public class InfoSystemService {
 
         infoSystemValidationService.validate(updatedInfoSystem.asJson());
 
-        List<Long> ids = infoSystemRepository.add(updatedInfoSystem);
-        return get(ids.get(0));
+        return infoSystemRepository.add(updatedInfoSystem);
     }
 
     /**
@@ -99,4 +96,5 @@ public class InfoSystemService {
 
         return new FilterRequest(filter, filterable.getSort(), filterable.getFields());
     }
+
 }

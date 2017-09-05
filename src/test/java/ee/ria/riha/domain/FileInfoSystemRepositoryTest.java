@@ -14,16 +14,16 @@ public class FileInfoSystemRepositoryTest {
 
     @Test(expected = InfoSystemRepositoryException.class)
     public void get() {
-        service.get(123L);
+        service.load("test-system");
     }
 
     @Test(expected = InfoSystemRepositoryException.class)
     public void update() {
-        service.update(123L, new InfoSystem("{}"));
+        service.update("test-system", new InfoSystem("{}"));
     }
 
     @Test(expected = InfoSystemRepositoryException.class)
     public void remove() {
-        service.remove(123L);
+        service.remove("test-system");
     }
 }
